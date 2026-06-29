@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Writing Group 1 Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS / Theme Variables */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #00C4CC, #7D2AE8);
+            --bg-color: #f3f4f6;
+            --sidebar-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 0;
+            z-index: 10;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-header {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .nav-list {
+            list-style: none;
+            margin-top: 16px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 16px 24px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-main);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .nav-item.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: inset 4px 0 0 rgba(255,255,255,0.5);
+        }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-footer strong {
+            color: var(--text-main);
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .profile-info h2 {
+            font-size: 1.8rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
+            background: rgba(125, 42, 232, 0.1);
+            color: #7D2AE8;
+        }
+
+        .leader-badge {
+            background: rgba(0, 196, 204, 0.1);
+            color: #008a90;
+        }
+
+        /* Progress Bar */
+        .stats-container {
+            margin-top: 16px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .stats-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-bg {
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .warning-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* Overview Table (For Leader) */
+        .group-overview {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+        }
+
+        .group-overview h3 {
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Activity Cards Grid */
+        .activities-header {
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding-bottom: 40px;
+        }
+
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .activity-card:hover {
+            border-color: #00C4CC;
+        }
+
+        .activity-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .activity-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            flex-grow: 1;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.submitted {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.missing {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .view-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .view-btn:hover {
+            opacity: 0.9;
+        }
+
+        .view-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            color: #9ca3af;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 8px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <h1>Creative Writing<br>Group 1 Portfolio</h1>
+                <h2>Grade 12 - Collins</h2>
+            </div>
+            <ul class="nav-list" id="nav-list">
+                </ul>
+        </div>
+        <div class="sidebar-footer">
+            Submitted to:
+            <strong>Mr. Rogell Kim Ticar</strong>
+            Adviser/Creative Writing Teacher
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div id="content-area">
+            </div>
+    </main>
+
+    <div class="modal" id="image-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <img id="modal-img-src" class="modal-img" src="" alt="Submission">
+        </div>
+    </div>
+
+    <script>
+       const groupData = [
+    {
+        id: "BODINO",
+        lastName: "BODINO",
+        fullName: "Bodino, Kent Adrianne R.",
+        role: "Leader",
+        isLeader: true,
+        pic: "images/bodino.jpg", // Change to your profile image filename
+        activities: [
+            { title: "Activity 1: TBA", description: "Task description here.", submitted: true, imgSrc: "images/bodino_act1.jpg" },
+            { title: "Activity 2: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 3: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 4: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 5: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 6: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 7: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 8: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 9: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 10: TBA", description: "Task description here.", submitted: false, imgSrc: null }
+        ]
+    },
+    {
+        id: "JALE",
+        lastName: "JALE",
+        fullName: "Jale, Cody E.",
+        role: "Member",
+        isLeader: false,
+        pic: "images/jale.jpg", // Change to Cody's profile image filename
+        activities: [
+            { title: "Activity 1: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 2: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 3: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 4: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 5: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 6: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 7: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 8: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 9: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 10: TBA", description: "Task description here.", submitted: false, imgSrc: null }
+        ]
+    },
+    {
+        id: "BUCTUAN",
+        lastName: "BUCTUAN",
+        fullName: "Buctuan, Revelliene P.",
+        role: "Member",
+        isLeader: false,
+        pic: "images/buctuan.jpg", // Change to Revelliene's profile image filename
+        activities: [
+            { title: "Activity 1: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 2: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 3: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 4: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 5: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 6: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 7: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 8: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 9: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 10: TBA", description: "Task description here.", submitted: false, imgSrc: null }
+        ]
+    },
+    {
+        id: "CORSONADO",
+        lastName: "CORSONADO",
+        fullName: "Corsonado, Lourence",
+        role: "Member",
+        isLeader: false,
+        pic: "images/corsonado.jpg", // Change to Lourence's profile image filename
+        activities: [
+            { title: "Activity 1: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 2: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 3: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 4: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 5: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 6: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 7: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 8: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 9: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 10: TBA", description: "Task description here.", submitted: false, imgSrc: null }
+        ]
+    },
+    {
+        id: "VENTURINA",
+        lastName: "VENTURINA",
+        fullName: "Venturina, Adrian Carlos",
+        role: "Member",
+        isLeader: false,
+        pic: "images/venturina.jpg", // Change to Adrian's profile image filename
+        activities: [
+            { title: "Activity 1: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 2: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 3: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 4: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 5: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 6: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 7: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 8: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 9: TBA", description: "Task description here.", submitted: false, imgSrc: null },
+            { title: "Activity 10: TBA", description: "Task description here.", submitted: false, imgSrc: null }
+        ]
+    }
+];
+
+        // Helper function to generate mock activities for a user
+        function generateActivities(total, completed) {
+            let acts = [];
+            for(let i = 1; i <= total; i++) {
+                acts.push({
+                    title: `Activity ${i}: TBA`,
+                    description: "Task description will be updated soon.",
+                    submitted: i <= completed,
+                    imgSrc: i <= completed ? PLACEHOLDER_WORK : null
+                });
+            }
+            return acts;
+        }
+
+        // Initialize App
+        function initApp() {
+            renderSidebar();
+            renderDashboard("BODINO"); // Load Leader by default
+        }
+
+        // Render Sidebar Navigation
+        function renderSidebar() {
+            const navList = document.getElementById("nav-list");
+            navList.innerHTML = "";
+            groupData.forEach(member => {
+                const li = document.createElement("li");
+                li.className = `nav-item ${member.id === "BODINO" ? "active" : ""}`;
+                li.id = `nav-${member.id}`;
+                li.innerHTML = `${member.isLeader ? "👑 " : ""}${member.lastName}`;
+                li.onclick = () => {
+                    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                    li.classList.add('active');
+                    renderDashboard(member.id);
+                };
+                navList.appendChild(li);
+            });
+        }
+
+        // Render Main Dashboard for Selected User
+        function renderDashboard(userId) {
+            const member = groupData.find(m => m.id === userId);
+            const contentArea = document.getElementById("content-area");
+            
+            // Calculate Progress
+            const totalTasks = member.activities.length;
+            const completedTasks = member.activities.filter(a => a.submitted).length;
+            const missingTasks = totalTasks - completedTasks;
+            const progressPercent = Math.round((completedTasks / totalTasks) * 100);
+
+            let html = `
+                <div class="profile-header">
+                    <img src="${member.pic}" alt="Profile Picture" class="profile-pic">
+                    <div class="profile-info">
+                        <h2>${member.fullName}</h2>
+                        <span class="role-badge ${member.isLeader ? 'leader-badge' : ''}">
+                            ${member.isLeader ? '👑 Leader' : 'Member'}
+                        </span>
+                        
+                        <div class="stats-container">
+                            <div class="stats-text">
+                                <span>Progress: ${progressPercent}%</span>
+                                <span>${completedTasks} Completed / ${missingTasks} Missing</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            ${missingTasks > 0 ? `<div class="warning-msg">⚠️ You have ${missingTasks} unsubmitted activities.</div>` : `<div class="warning-msg" style="color:var(--success)">🌟 All activities submitted!</div>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Append Leader Overview if BODINO is selected
+            if (member.isLeader) {
+                html += `
+                <div class="group-overview">
+                    <h3>👑 Group Submission Overview</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Completed</th>
+                                <th>Missing</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${groupData.map(m => {
+                                const mCompleted = m.activities.filter(a => a.submitted).length;
+                                const mMissing = m.activities.length - mCompleted;
+                                return `
+                                    <tr>
+                                        <td><strong>${m.lastName}</strong></td>
+                                        <td>${m.role}</td>
+                                        <td>${mCompleted}/10</td>
+                                        <td style="color: ${mMissing > 0 ? 'var(--danger)' : 'var(--text-main)'}">${mMissing}</td>
+                                        <td>${mMissing === 0 ? '✅ Clear' : '❌ Pending'}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                `;
+            }
+
+            // Append Activities Grid
+            html += `
+                <h3 class="activities-header">Activities Portfolio</h3>
+                <div class="activities-grid">
+                    ${member.activities.map((act, index) => `
+                        <div class="activity-card">
+                            <h4>${act.title}</h4>
+                            <p>${act.description}</p>
+                            <div class="status">
+                                <span class="status-badge ${act.submitted ? 'submitted' : 'missing'}">
+                                    ${act.submitted ? '✅ Submitted' : '❌ Missing'}
+                                </span>
+                                <button class="view-btn" 
+                                    ${act.submitted ? `onclick="openModal('${act.imgSrc}')"` : 'disabled'}>
+                                    ${act.submitted ? 'View' : 'Pending'}
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            contentArea.innerHTML = html;
+        }
+
+        // Modal Functions
+        function openModal(imgSrc) {
+            const modal = document.getElementById("image-modal");
+            const modalImg = document.getElementById("modal-img-src");
+            modalImg.src = imgSrc;
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("image-modal");
+            modal.style.display = "none";
+        }
+
+        // Close modal when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById("image-modal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Boot up
+        initApp();
+    </script>
+</body>
+</html>
